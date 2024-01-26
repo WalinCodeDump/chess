@@ -1,4 +1,5 @@
-
+import java.time.LocalDate;
+import java.time.Month;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
@@ -14,9 +15,17 @@ public class Main {
 
  */
 
-        System.out.println("Ok now let's do this:\n\n");
+        System.out.println("Ok now let's do thi:\n\n");
         GuyMan sayer = new GuyMan();
         sayer.says("I'm here to program, innit");
+
+        LocalDate date = LocalDate.of(2023, Month.JANUARY,25);
+        System.out.println(date);
+        System.out.println(myStrProgram());
+    }
+
+    public static String myStrProgram() {
+        return "get got";
     }
 }
 
