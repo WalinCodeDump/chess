@@ -7,9 +7,9 @@ package chess;
  * signature of the existing methods.
  */
 public class ChessBoard {
-
+    private ChessPiece[][] squares = new ChessPiece[8][8];
     public ChessBoard() {
-int a =0;
+
     }
 
     /**
@@ -19,7 +19,7 @@ int a =0;
      * @param piece    the piece to add
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
-        throw new RuntimeException("Not implemented");
+        squares[position.getRow()][position.getColumn()] = piece;
     }
 
     /**
