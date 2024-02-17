@@ -192,4 +192,8 @@ public class ChessPiece {
         }
         return returnMoves;
     }
+
+    public int HashCode() {
+        return 0;
+    }
 }
