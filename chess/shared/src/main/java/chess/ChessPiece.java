@@ -61,124 +61,77 @@ public class ChessPiece {
         var returnMoves = new HashSet<ChessMove>();
         switch(type) {
             case KING -> {
-                // Any valid position within 1 square of current, including diagonals.
-                // Initialized below, then later added based on current square
-                var notPromoted = PieceType.KING;
+                // Any valid position within 1 square of current place, including diagonals.
 
-                // ------ Up and down ------
-                // U stands for "Up" because the piece moves one square up
-                var endU = new ChessPosition(row+1,col);
-                var moveU = new ChessMove(start, endU, notPromoted);
-                // D stands for "Down" because the piece moves one square down
-                var endD = new ChessPosition(row-1, col);
-                var moveD = new ChessMove(start, endD, notPromoted);
-
-                // -------Right side--------
-                // UR stands for "Up Right" because the piece moves one square up and one right
-                var endUR = new ChessPosition(row+1, col+1);
-                var moveUR = new ChessMove(start, endUR, notPromoted);
-                // R stands for "Right" because the piece moves one square right
-                var endR = new ChessPosition(row, col+1);
-                var moveR = new ChessMove(start, endR, notPromoted);
-                // DR stands for "Down Right" because the piece moves one square down and one right
-                var endDR = new ChessPosition(row-1,col+1);
-                var moveDR = new ChessMove(start, endDR, notPromoted);
-
-                // -------Left side--------
-                // DL stands for "Down Left" because the piece moves one square down and one left
-                var endDL = new ChessPosition(row-1, col-1);
-                var moveDL = new ChessMove(start, endDL, notPromoted);
-                // L stands for "Left" because the piece moves one square to the left
-                var endL = new ChessPosition(row,col-1);
-                var moveL = new ChessMove(start, endL, notPromoted);
-                // UL stands for "Up Left" because the piece moves one square up and one left
-                var endUL = new ChessPosition(row+1, col-1);
-                var moveUL = new ChessMove(start, endUL, notPromoted);
-
-                // Check if the king is near the top or bottom edge; then, check for the other two edges.
-                if (row == 8) {
-                    // King is at top edge
-                    returnMoves.add(moveD);
-                    // Check if king is near a right or left edge:
-                    if (col == 8) {
-                        // King is at right edge; top-right corner
-                        returnMoves.add(moveDL);
-                        returnMoves.add(moveL);
-                    }
-                    else if (col == 1) {
-                        // King is at left edge; top-left corner
-                        returnMoves.add(moveDR);
-                        returnMoves.add(moveR);
-                    }
-                    else {
-                        // King is at top edge, away from left and right edges.
-                        returnMoves.add(moveDL);
-                        returnMoves.add(moveL);
-                        returnMoves.add(moveDR);
-                        returnMoves.add(moveR);
+                PieceType notPromoted = null;
+                // i loops through rows; j loops through columns. Values of i and j range from -1,0,1
+                // since only adjacent squares are considered.
+                for (int i = -1; i <= 1; i++) {
+                    for (int j = -1; j <= 1; j++) {
+                        if (i == 0 && j ==0) continue; // Can't move to its original position
+                        if (row+i < 0 || row+i > 8) continue; // Can't move off the top or bottom edges
+                        if (col+j < 0 || col+j > 8) continue; // Can't move off the left or right edges
+                        var endSquare = new ChessPosition(row+i,col+j);
+                        var move = new ChessMove(start, endSquare, notPromoted);
+                        returnMoves.add(move);
                     }
                 }
-                else if (row == 1) {
-                    // King is at bottom edge
-                    returnMoves.add(moveU);
-                    // Check if king is near a right or left edge:
-                    if (col == 8) {
-                        // King is at right edge; bottom-right corner
-                        returnMoves.add(moveUL);
-                        returnMoves.add(moveL);
-                    }
-                    else if (col == 1) {
-                        // King is at left edge; bottom-left corner
-                        returnMoves.add(moveUR);
-                        returnMoves.add(moveR);
-                    }
-                    else {
-                        // King is at bottom edge, away from left and right edges.
-                        returnMoves.add(moveUL);
-                        returnMoves.add(moveL);
-                        returnMoves.add(moveUR);
-                        returnMoves.add(moveR);
-                    }
-                }
-                else {
-                    // King is not at top or bottom edge
-                    returnMoves.add(moveD);
-                    returnMoves.add(moveU);
-                    // Check if king is near a right or left edge:
-                    if (col == 8) {
-                        // King is at right edge
-                        returnMoves.add(moveUL);
-                        returnMoves.add(moveL);
-                        returnMoves.add(moveDL);
-                    }
-                    else if (col == 1) {
-                        // King is at left edge
-                        returnMoves.add(moveUR);
-                        returnMoves.add(moveR);
-                        returnMoves.add(moveDR);
-                    }
-                    else {
-                        // King is somewhere in the middle of the board, not at any edge
-                        returnMoves.add(moveUL);
-                        returnMoves.add(moveL);
-                        returnMoves.add(moveDL);
-
-                        returnMoves.add(moveUR);
-                        returnMoves.add(moveR);
-                        returnMoves.add(moveDR);
-                    }
-                }
-
-
-
-                // Check if king is near a corner:
-
             }
             case QUEEN -> {
                 // All diagonal and orthogonal movements
+
+                PieceType notPromoted = null;
+
             }
             case BISHOP -> {
                 // All diagonal movements
+
+                PieceType notPromoted = null;
+                // adds based on diagonal movements.
+                // Adds up-right moves.
+                for (int i = 1; i < 8; i++) {
+                    if (row+i > 8 || col+i > 8) break; // Can't move off the top or right edges
+
+                    var endUR = new ChessPosition(row+i,col+i);
+                    var moveUR = new ChessMove(start, endUR, notPromoted);
+
+                    // TODO: Find if a space is blocked (same color) or occupied (different color)
+                    // If blocked: break. If occupied: add, then break.
+                    returnMoves.add(moveUR);
+                }
+                // Adds down-right moves.
+                for (int i = 1; i < 8; i++) {
+                    if (row-i < 0 || col+i > 8) break; // Can't move off the bottom or right edges
+
+                    var endDR = new ChessPosition(row-i,col+i);
+                    var moveDR = new ChessMove(start, endDR, notPromoted);
+
+                    // TODO: Find if a space is blocked (same color) or occupied (different color)
+                    // If blocked: break. If occupied: add, then break.
+                    returnMoves.add(moveDR);
+                }
+                // Adds down-left moves.
+                for (int i = 1; i < 8; i++) {
+                    if (row-i < 0 || col-i < 0) break; // Can't move off the bottom or left edges
+
+                    var endDL = new ChessPosition(row-i,col-i);
+                    var moveDL = new ChessMove(start, endDL, notPromoted);
+
+                    // TODO: Find if a space is blocked (same color) or occupied (different color)
+                    // If blocked: break. If occupied: add, then break.
+                    returnMoves.add(moveDL);
+                }
+                // Adds up-left moves.
+                for (int i = 1; i < 8; i++) {
+                    if (row+i > 8 || col-i < 0) break; // Can't move off the top or left edges
+
+                    var endUL = new ChessPosition(row+i,col-i);
+                    var moveUL = new ChessMove(start, endUL, notPromoted);
+
+                    // TODO: Find if a space is blocked (same color) or occupied (different color)
+                    // If blocked: break. If occupied: add, then break.
+                    returnMoves.add(moveUL);
+                }
             }
             case KNIGHT -> {
                 // Any movement going 2 squares in one direction, and 1 in a perpendicular direction
