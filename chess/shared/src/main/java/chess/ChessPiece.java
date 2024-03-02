@@ -140,7 +140,55 @@ public class ChessPiece {
                 // All orthogonal movements (cribbed from Rook section)
                 // I get that this should be abstracted elsewhere rather than repeated, but...
                 // I don't want to create any new methods just to end up effectively copying them in anyway.
+                {
+                    // All orthogonal movements
+                    PieceType notPromoted = null;
 
+                    // Moves upward
+                    for (int i = 1; i <= 8; i++) {
+                        if (row + i > 8) break; // Can't move up past the top row
+                        var endU = new ChessPosition(row+i,col);
+                        var moveU = new ChessMove(start,endU,notPromoted);
+
+                        // TODO: Find if a space is blocked (same color) or occupied (different color)
+                        // If blocked: break. If occupied: add, then break.
+                        // use ChessBoard.getPiece()
+                        returnMoves.add(moveU);
+                    }
+                    // Moves downward
+                    for (int i = 1; i <= 8; i++) {
+                        if (row - i < 1) break; // Can't move down past the bottom row
+                        var endD = new ChessPosition(row-i,col);
+                        var moveD = new ChessMove(start,endD,notPromoted);
+
+                        // TODO: Find if a space is blocked (same color) or occupied (different color)
+                        // If blocked: break. If occupied: add, then break.
+                        // use ChessBoard.getPiece()
+                        returnMoves.add(moveD);
+                    }
+                    // Moves left
+                    for (int i = 1; i <= 8; i++) {
+                        if (col - i < 1) break; // Can't move left past the left column
+                        var endL = new ChessPosition(row,col-i);
+                        var moveL = new ChessMove(start,endL,notPromoted);
+
+                        // TODO: Find if a space is blocked (same color) or occupied (different color)
+                        // If blocked: break. If occupied: add, then break.
+                        // use ChessBoard.getPiece()
+                        returnMoves.add(moveL);
+                    }
+                    // Moves right
+                    for (int i = 1; i <= 8; i++) {
+                        if (row + i > 8) break; // Can't move right past the right column
+                        var endR = new ChessPosition(row,col+i);
+                        var moveR = new ChessMove(start,endR,notPromoted);
+
+                        // TODO: Find if a space is blocked (same color) or occupied (different color)
+                        // If blocked: break. If occupied: add, then break.
+                        // use ChessBoard.getPiece()
+                        returnMoves.add(moveR);
+                    }
+                }
             }
             case BISHOP -> {
                 // All diagonal movements
@@ -195,14 +243,74 @@ public class ChessPiece {
             }
             case KNIGHT -> {
                 // Any movement going 2 squares in one direction, and 1 in a perpendicular direction
+                // There are eight locations to move to. Two for each orthogonal direction.
+                PieceType notPromoted = null;
+
+                // Up: UL, UR    (up 2, then 1 to a side)
+                ChessMove moveUL = knightMove(row,col,2,-1);
+                ChessMove moveUR = knightMove(row,col,2,1);
+
+                // Right: RU, RD (right 2, then 1 to a side)
+                ChessMove moveRU = knightMove(row,col,1,2);
+                ChessMove moveRD = knightMove(row,col,-1,2);
+
+                // Down: DR, DL  (down 2, then 1 to a side)
+                ChessMove moveDR = knightMove(row,col,-2,1);
+                ChessMove moveDL = knightMove(row,col,-2,-1);
+
+                // Left: LD, LU  (left 2, then 1 to a side)
+                ChessMove moveLD = knightMove(row,col,-1,-2);
+                ChessMove moveLU = knightMove(row,col,1,-2);
+
+                //TODO: Add the moves
             }
             case ROOK -> {
                 // All orthogonal movements
                 PieceType notPromoted = null;
+
+                // Moves upward
                 for (int i = 1; i <= 8; i++) {
-                    if (row + i == 8) break; // Can't move up past the top row
+                    if (row + i > 8) break; // Can't move up past the top row
                     var endU = new ChessPosition(row+i,col);
                     var moveU = new ChessMove(start,endU,notPromoted);
+
+                    // TODO: Find if a space is blocked (same color) or occupied (different color)
+                    // If blocked: break. If occupied: add, then break.
+                    // use ChessBoard.getPiece()
+                    returnMoves.add(moveU);
+                }
+                // Moves downward
+                for (int i = 1; i <= 8; i++) {
+                    if (row - i < 1) break; // Can't move down past the bottom row
+                    var endD = new ChessPosition(row-i,col);
+                    var moveD = new ChessMove(start,endD,notPromoted);
+
+                    // TODO: Find if a space is blocked (same color) or occupied (different color)
+                    // If blocked: break. If occupied: add, then break.
+                    // use ChessBoard.getPiece()
+                    returnMoves.add(moveD);
+                }
+                // Moves left
+                for (int i = 1; i <= 8; i++) {
+                    if (col - i < 1) break; // Can't move left past the left column
+                    var endL = new ChessPosition(row,col-i);
+                    var moveL = new ChessMove(start,endL,notPromoted);
+
+                    // TODO: Find if a space is blocked (same color) or occupied (different color)
+                    // If blocked: break. If occupied: add, then break.
+                    // use ChessBoard.getPiece()
+                    returnMoves.add(moveL);
+                }
+                // Moves right
+                for (int i = 1; i <= 8; i++) {
+                    if (row + i > 8) break; // Can't move right past the right column
+                    var endR = new ChessPosition(row,col+i);
+                    var moveR = new ChessMove(start,endR,notPromoted);
+
+                    // TODO: Find if a space is blocked (same color) or occupied (different color)
+                    // If blocked: break. If occupied: add, then break.
+                    // use ChessBoard.getPiece()
+                    returnMoves.add(moveR);
                 }
             }
             case PAWN -> {
@@ -212,6 +320,36 @@ public class ChessPiece {
         }
         return returnMoves;
     }
+
+
+    /**
+     * Abstracts the movement for a knight piece. Generates a new ChessMove that is
+     * 2 squares over in an orthogonal direction to the piece, and 1 square over in
+     * a perpendicular direction to the 2-square step.
+     *
+     * @param row: The starting row of the knight piece.
+     * @param col: The starting column of the knight piece.
+     * @param updown The movement in the up or down direction. Positive for up; negative for down.
+     * @param leftright The movement in the left or right direction. Positive for right; negative for left.
+     * @return
+     */
+    public ChessMove knightMove(int row, int col, int updown, int leftright)
+    {
+        // Bounds check
+        if (row + updown < 1 || row + updown > 8) return null;
+        if (col + leftright < 1 || col + leftright > 8) return null;
+
+
+        var start = new ChessPosition(row,col);
+        var end = new ChessPosition(row + updown, col + leftright);
+        // TODO: Add piece check.
+        // Use ChessBoard.getPiece to check team color as well as the opponents' team color.
+
+        // Then, return the actual move if it's valid.
+        return new ChessMove(start,end,null);
+    }
+
+
 
     @Override
     public boolean equals(Object o) {
