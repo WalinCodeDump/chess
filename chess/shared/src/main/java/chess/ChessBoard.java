@@ -31,7 +31,7 @@ public class ChessBoard {
      * position
      */
     public ChessPiece getPiece(ChessPosition position) {
-        return squares[position.getRow()][position.getColumn()];
+        return squares[position.getRow() - 1][position.getColumn() - 1];
     }
 
     /**
@@ -41,6 +41,7 @@ public class ChessBoard {
     public void resetBoard() {
         // White on bottom.
         // King is to the right, if I forget.
+
 
         // Set pawns
         for (int i = 1; i <= 8; i++) {

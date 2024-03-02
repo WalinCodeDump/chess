@@ -69,8 +69,8 @@ public class ChessPiece {
                 for (int i = -1; i <= 1; i++) {
                     for (int j = -1; j <= 1; j++) {
                         if (i == 0 && j ==0) continue; // Can't move to its original position
-                        if (row+i < 0 || row+i > 8) continue; // Can't move off the top or bottom edges
-                        if (col+j < 0 || col+j > 8) continue; // Can't move off the left or right edges
+                        if (row+i < 1 || row+i > 8) continue; // Can't move off the top or bottom edges
+                        if (col+j < 1 || col+j > 8) continue; // Can't move off the left or right edges
                         var endSquare = new ChessPosition(row+i,col+j);
                         var move = new ChessMove(start, endSquare, notPromoted);
                         returnMoves.add(move);
@@ -101,7 +101,7 @@ public class ChessPiece {
                 }
                 // Adds down-right moves.
                 for (int i = 1; i < 8; i++) {
-                    if (row-i < 0 || col+i > 8) break; // Can't move off the bottom or right edges
+                    if (row-i < 1 || col+i > 8) break; // Can't move off the bottom or right edges
 
                     var endDR = new ChessPosition(row-i,col+i);
                     var moveDR = new ChessMove(start, endDR, notPromoted);
@@ -112,7 +112,7 @@ public class ChessPiece {
                 }
                 // Adds down-left moves.
                 for (int i = 1; i < 8; i++) {
-                    if (row-i < 0 || col-i < 0) break; // Can't move off the bottom or left edges
+                    if (row-i < 1 || col-i < 1) break; // Can't move off the bottom or left edges
 
                     var endDL = new ChessPosition(row-i,col-i);
                     var moveDL = new ChessMove(start, endDL, notPromoted);
@@ -123,7 +123,7 @@ public class ChessPiece {
                 }
                 // Adds up-left moves.
                 for (int i = 1; i < 8; i++) {
-                    if (row+i > 8 || col-i < 0) break; // Can't move off the top or left edges
+                    if (row+i > 8 || col-i < 1) break; // Can't move off the top or left edges
 
                     var endUL = new ChessPosition(row+i,col-i);
                     var moveUL = new ChessMove(start, endUL, notPromoted);
