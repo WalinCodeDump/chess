@@ -73,6 +73,10 @@ public class ChessPiece {
                         if (col+j < 1 || col+j > 8) continue; // Can't move off the left or right edges
                         var endSquare = new ChessPosition(row+i,col+j);
                         var move = new ChessMove(start, endSquare, notPromoted);
+
+                        // TODO: Find if a space is blocked (same color) or occupied (different color)
+                        // If blocked: break. If occupied: add, then break.
+                        // use ChessBoard.getPiece()
                         returnMoves.add(move);
                     }
                 }
@@ -80,14 +84,69 @@ public class ChessPiece {
             case QUEEN -> {
                 // All diagonal and orthogonal movements
 
-                PieceType notPromoted = null;
+                // All diagonal movements (cribbed from Bishop section)
+                // I get that this should be abstracted elsewhere rather than repeated, but...
+                // I don't want to create any new methods just to end up effectively copying them in anyway.
+                {
+                    PieceType notPromoted = null;
+
+                    // Adds up-right moves.
+                    for (int i = 1; i < 8; i++) {
+                        if (row+i > 8 || col+i > 8) break; // Can't move off the top or right edges
+
+                        var endUR = new ChessPosition(row+i,col+i);
+                        var moveUR = new ChessMove(start, endUR, notPromoted);
+
+                        // TODO: Find if a space is blocked (same color) or occupied (different color)
+                        // If blocked: break. If occupied: add, then break.
+                        // use ChessBoard.getPiece()
+                        returnMoves.add(moveUR);
+                    }
+                    // Adds down-right moves.
+                    for (int i = 1; i < 8; i++) {
+                        if (row-i < 1 || col+i > 8) break; // Can't move off the bottom or right edges
+
+                        var endDR = new ChessPosition(row-i,col+i);
+                        var moveDR = new ChessMove(start, endDR, notPromoted);
+
+                        // TODO: Find if a space is blocked (same color) or occupied (different color)
+                        // If blocked: break. If occupied: add, then break.
+                        returnMoves.add(moveDR);
+                    }
+                    // Adds down-left moves.
+                    for (int i = 1; i < 8; i++) {
+                        if (row-i < 1 || col-i < 1) break; // Can't move off the bottom or left edges
+
+                        var endDL = new ChessPosition(row-i,col-i);
+                        var moveDL = new ChessMove(start, endDL, notPromoted);
+
+                        // TODO: Find if a space is blocked (same color) or occupied (different color)
+                        // If blocked: break. If occupied: add, then break.
+                        returnMoves.add(moveDL);
+                    }
+                    // Adds up-left moves.
+                    for (int i = 1; i < 8; i++) {
+                        if (row+i > 8 || col-i < 1) break; // Can't move off the top or left edges
+
+                        var endUL = new ChessPosition(row+i,col-i);
+                        var moveUL = new ChessMove(start, endUL, notPromoted);
+
+                        // TODO: Find if a space is blocked (same color) or occupied (different color)
+                        // If blocked: break. If occupied: add, then break.
+                        returnMoves.add(moveUL);
+                    }
+                }
+
+                // All orthogonal movements (cribbed from Rook section)
+                // I get that this should be abstracted elsewhere rather than repeated, but...
+                // I don't want to create any new methods just to end up effectively copying them in anyway.
 
             }
             case BISHOP -> {
                 // All diagonal movements
 
                 PieceType notPromoted = null;
-                // adds based on diagonal movements.
+
                 // Adds up-right moves.
                 for (int i = 1; i < 8; i++) {
                     if (row+i > 8 || col+i > 8) break; // Can't move off the top or right edges
@@ -97,6 +156,7 @@ public class ChessPiece {
 
                     // TODO: Find if a space is blocked (same color) or occupied (different color)
                     // If blocked: break. If occupied: add, then break.
+                    // use ChessBoard.getPiece()
                     returnMoves.add(moveUR);
                 }
                 // Adds down-right moves.
@@ -138,6 +198,12 @@ public class ChessPiece {
             }
             case ROOK -> {
                 // All orthogonal movements
+                PieceType notPromoted = null;
+                for (int i = 1; i <= 8; i++) {
+                    if (row + i == 8) break; // Can't move up past the top row
+                    var endU = new ChessPosition(row+i,col);
+                    var moveU = new ChessMove(start,endU,notPromoted);
+                }
             }
             case PAWN -> {
                 // Up two squares if starting; otherwise up one square.
