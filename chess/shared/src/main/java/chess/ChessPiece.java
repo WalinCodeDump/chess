@@ -71,13 +71,26 @@ public class ChessPiece {
                         if (i == 0 && j ==0) continue; // Can't move to its original position
                         if (row+i < 1 || row+i > 8) continue; // Can't move off the top or bottom edges
                         if (col+j < 1 || col+j > 8) continue; // Can't move off the left or right edges
+
+                        // Create move.
                         var endSquare = new ChessPosition(row+i,col+j);
                         var move = new ChessMove(start, endSquare, notPromoted);
 
-                        // TODO: Find if a space is blocked (same color) or occupied (different color)
-                        // If blocked: break. If occupied: add, then break.
-                        // use ChessBoard.getPiece()
-                        returnMoves.add(move);
+                        // Find if a space is blocked (same color) or occupied (different color)
+                        if (board.getPiece(endSquare) == null) {
+                            // Space is unoccupied.
+                            returnMoves.add(move);
+                        }
+                        else {
+                            // Space is occupied.
+                            if (isUnblocked(board,move)) {
+                                // Space contains an enemy piece.
+                                returnMoves.add(move);
+                            }
+                            else {
+                                // Space contains a friendly piece.
+                            }
+                        }
                     }
                 }
             }
@@ -97,10 +110,24 @@ public class ChessPiece {
                         var endUR = new ChessPosition(row+i,col+i);
                         var moveUR = new ChessMove(start, endUR, notPromoted);
 
-                        // TODO: Find if a space is blocked (same color) or occupied (different color)
-                        // If blocked: break. If occupied: add, then break.
-                        // use ChessBoard.getPiece()
-                        returnMoves.add(moveUR);
+                        // Find if a space is blocked (same color) or occupied (different color)
+                        if (board.getPiece(endUR) == null) {
+                            // Space is unoccupied.
+                            returnMoves.add(moveUR);
+                        }
+                        else {
+                            // Space is occupied.
+                            if (isUnblocked(board,moveUR)) {
+                                // Space contains an enemy piece.
+                                // The move is valid, but the queen cannot move past this piece.
+                                returnMoves.add(moveUR);
+                                break;
+                            }
+                            else {
+                                // Space contains a friendly piece. Cannot move to or past here.
+                                break;
+                            }
+                        }
                     }
                     // Adds down-right moves.
                     for (int i = 1; i < 8; i++) {
@@ -109,9 +136,24 @@ public class ChessPiece {
                         var endDR = new ChessPosition(row-i,col+i);
                         var moveDR = new ChessMove(start, endDR, notPromoted);
 
-                        // TODO: Find if a space is blocked (same color) or occupied (different color)
-                        // If blocked: break. If occupied: add, then break.
-                        returnMoves.add(moveDR);
+                        // Find if a space is blocked (same color) or occupied (different color)
+                        if (board.getPiece(endDR) == null) {
+                            // Space is unoccupied.
+                            returnMoves.add(moveDR);
+                        }
+                        else {
+                            // Space is occupied.
+                            if (isUnblocked(board,moveDR)) {
+                                // Space contains an enemy piece.
+                                // The move is valid, but the queen cannot move past this piece.
+                                returnMoves.add(moveDR);
+                                break;
+                            }
+                            else {
+                                // Space contains a friendly piece. Cannot move to or past here.
+                                break;
+                            }
+                        }
                     }
                     // Adds down-left moves.
                     for (int i = 1; i < 8; i++) {
@@ -120,9 +162,24 @@ public class ChessPiece {
                         var endDL = new ChessPosition(row-i,col-i);
                         var moveDL = new ChessMove(start, endDL, notPromoted);
 
-                        // TODO: Find if a space is blocked (same color) or occupied (different color)
-                        // If blocked: break. If occupied: add, then break.
-                        returnMoves.add(moveDL);
+                        // Find if a space is blocked (same color) or occupied (different color)
+                        if (board.getPiece(endDL) == null) {
+                            // Space is unoccupied.
+                            returnMoves.add(moveDL);
+                        }
+                        else {
+                            // Space is occupied.
+                            if (isUnblocked(board,moveDL)) {
+                                // Space contains an enemy piece.
+                                // The move is valid, but the queen cannot move past this piece.
+                                returnMoves.add(moveDL);
+                                break;
+                            }
+                            else {
+                                // Space contains a friendly piece. Cannot move to or past here.
+                                break;
+                            }
+                        }
                     }
                     // Adds up-left moves.
                     for (int i = 1; i < 8; i++) {
@@ -131,9 +188,24 @@ public class ChessPiece {
                         var endUL = new ChessPosition(row+i,col-i);
                         var moveUL = new ChessMove(start, endUL, notPromoted);
 
-                        // TODO: Find if a space is blocked (same color) or occupied (different color)
-                        // If blocked: break. If occupied: add, then break.
-                        returnMoves.add(moveUL);
+                        // Find if a space is blocked (same color) or occupied (different color)
+                        if (board.getPiece(endUL) == null) {
+                            // Space is unoccupied.
+                            returnMoves.add(moveUL);
+                        }
+                        else {
+                            // Space is occupied.
+                            if (isUnblocked(board,moveUL)) {
+                                // Space contains an enemy piece.
+                                // The move is valid, but the queen cannot move past this piece.
+                                returnMoves.add(moveUL);
+                                break;
+                            }
+                            else {
+                                // Space contains a friendly piece. Cannot move to or past here.
+                                break;
+                            }
+                        }
                     }
                 }
 
@@ -150,10 +222,24 @@ public class ChessPiece {
                         var endU = new ChessPosition(row+i,col);
                         var moveU = new ChessMove(start,endU,notPromoted);
 
-                        // TODO: Find if a space is blocked (same color) or occupied (different color)
-                        // If blocked: break. If occupied: add, then break.
-                        // use ChessBoard.getPiece()
-                        returnMoves.add(moveU);
+                        // Find if a space is blocked (same color) or occupied (different color)
+                        if (board.getPiece(endU) == null) {
+                            // Space is unoccupied.
+                            returnMoves.add(moveU);
+                        }
+                        else {
+                            // Space is occupied.
+                            if (isUnblocked(board,moveU)) {
+                                // Space contains an enemy piece.
+                                // The move is valid, but the queen cannot move past this piece.
+                                returnMoves.add(moveU);
+                                break;
+                            }
+                            else {
+                                // Space contains a friendly piece. Cannot move to or past here.
+                                break;
+                            }
+                        }
                     }
                     // Moves downward
                     for (int i = 1; i <= 8; i++) {
@@ -161,10 +247,24 @@ public class ChessPiece {
                         var endD = new ChessPosition(row-i,col);
                         var moveD = new ChessMove(start,endD,notPromoted);
 
-                        // TODO: Find if a space is blocked (same color) or occupied (different color)
-                        // If blocked: break. If occupied: add, then break.
-                        // use ChessBoard.getPiece()
-                        returnMoves.add(moveD);
+                        // Find if a space is blocked (same color) or occupied (different color)
+                        if (board.getPiece(endD) == null) {
+                            // Space is unoccupied.
+                            returnMoves.add(moveD);
+                        }
+                        else {
+                            // Space is occupied.
+                            if (isUnblocked(board,moveD)) {
+                                // Space contains an enemy piece.
+                                // The move is valid, but the queen cannot move past this piece.
+                                returnMoves.add(moveD);
+                                break;
+                            }
+                            else {
+                                // Space contains a friendly piece. Cannot move to or past here.
+                                break;
+                            }
+                        }
                     }
                     // Moves left
                     for (int i = 1; i <= 8; i++) {
@@ -172,10 +272,24 @@ public class ChessPiece {
                         var endL = new ChessPosition(row,col-i);
                         var moveL = new ChessMove(start,endL,notPromoted);
 
-                        // TODO: Find if a space is blocked (same color) or occupied (different color)
-                        // If blocked: break. If occupied: add, then break.
-                        // use ChessBoard.getPiece()
-                        returnMoves.add(moveL);
+                        // Find if a space is blocked (same color) or occupied (different color)
+                        if (board.getPiece(endL) == null) {
+                            // Space is unoccupied.
+                            returnMoves.add(moveL);
+                        }
+                        else {
+                            // Space is occupied.
+                            if (isUnblocked(board,moveL)) {
+                                // Space contains an enemy piece.
+                                // The move is valid, but the queen cannot move past this piece.
+                                returnMoves.add(moveL);
+                                break;
+                            }
+                            else {
+                                // Space contains a friendly piece. Cannot move to or past here.
+                                break;
+                            }
+                        }
                     }
                     // Moves right
                     for (int i = 1; i <= 8; i++) {
@@ -183,10 +297,24 @@ public class ChessPiece {
                         var endR = new ChessPosition(row,col+i);
                         var moveR = new ChessMove(start,endR,notPromoted);
 
-                        // TODO: Find if a space is blocked (same color) or occupied (different color)
-                        // If blocked: break. If occupied: add, then break.
-                        // use ChessBoard.getPiece()
-                        returnMoves.add(moveR);
+                        // Find if a space is blocked (same color) or occupied (different color)
+                        if (board.getPiece(endR) == null) {
+                            // Space is unoccupied.
+                            returnMoves.add(moveR);
+                        }
+                        else {
+                            // Space is occupied.
+                            if (isUnblocked(board,moveR)) {
+                                // Space contains an enemy piece.
+                                // The move is valid, but the queen cannot move past this piece.
+                                returnMoves.add(moveR);
+                                break;
+                            }
+                            else {
+                                // Space contains a friendly piece. Cannot move to or past here.
+                                break;
+                            }
+                        }
                     }
                 }
             }
@@ -263,6 +391,7 @@ public class ChessPiece {
                 ChessMove moveLU = knightMove(row,col,1,-2);
 
                 //TODO: Add the moves
+                //TODO: Add a block-checker.
             }
             case ROOK -> {
                 // All orthogonal movements
@@ -331,7 +460,7 @@ public class ChessPiece {
      * @param col: The starting column of the knight piece.
      * @param updown The movement in the up or down direction. Positive for up; negative for down.
      * @param leftright The movement in the left or right direction. Positive for right; negative for left.
-     * @return
+     * @return A move from (row,col) to (row+updown,col+leftright)
      */
     public ChessMove knightMove(int row, int col, int updown, int leftright)
     {
@@ -349,7 +478,28 @@ public class ChessPiece {
         return new ChessMove(start,end,null);
     }
 
+    /**
+     * Checks if a move is blocked by other pieces, either its own color or other colors.
+     *
+     * @param board the board that the move is being made on.
+     * @param move the move.
+     * @return true if that move can be made (i.e. the move is unblocked).
+     */
+    public boolean isUnblocked(ChessBoard board, ChessMove move)
+    {
+        var start = move.getStartPosition();
+        var startPiece = board.getPiece(start);
+        var startColor = startPiece.getTeamColor();
 
+        var end = move.getEndPosition();
+        var endPiece = board.getPiece(end);
+        if (endPiece == null) return true;
+        var endColor = endPiece.getTeamColor();
+        if (startColor == endColor) return false;
+
+        // Is going to take a piece
+        return true;
+    }
 
     @Override
     public boolean equals(Object o) {
