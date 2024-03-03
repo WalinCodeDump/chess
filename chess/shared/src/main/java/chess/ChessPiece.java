@@ -372,23 +372,63 @@ public class ChessPiece {
             case KNIGHT -> {
                 // Any movement going 2 squares in one direction, and 1 in a perpendicular direction
                 // There are eight locations to move to. Two for each orthogonal direction.
-                PieceType notPromoted = null;
+                PieceType notPromoted = null; // unused
 
                 // Up: UL, UR    (up 2, then 1 to a side)
                 ChessMove moveUL = knightMove(row,col,2,-1);
                 ChessMove moveUR = knightMove(row,col,2,1);
+                if (row + 2 <= 8) {
+                    // Bounds and occupation check for Up-Left
+                    if (col - 1 >= 1 && isUnblocked(board,moveUL)) {
+                        returnMoves.add(moveUL);
+                    }
+                    // Bounds and occupation check for Up-Right
+                    if (col + 1 <= 8 && isUnblocked(board,moveUR)) {
+                        returnMoves.add(moveUR);
+                    }
+                }
 
                 // Right: RU, RD (right 2, then 1 to a side)
                 ChessMove moveRU = knightMove(row,col,1,2);
                 ChessMove moveRD = knightMove(row,col,-1,2);
+                if (col + 2 <= 8) {
+                    // Bounds and occupation check for Right-Up
+                    if (row + 1 <= 8 && isUnblocked(board,moveRU)) {
+                        returnMoves.add(moveRU);
+                    }
+                    // Bounds and occupation check for Right-Down
+                    if (row - 1 >= 1 && isUnblocked(board,moveRD)) {
+                        returnMoves.add(moveRD);
+                    }
+                }
 
                 // Down: DR, DL  (down 2, then 1 to a side)
                 ChessMove moveDR = knightMove(row,col,-2,1);
                 ChessMove moveDL = knightMove(row,col,-2,-1);
+                if (row - 2 >= 1) {
+                    // Bounds and occupation check for Down-Right
+                    if (col +1 <= 8 && isUnblocked(board,moveDR)) {
+                        returnMoves.add(moveDR);
+                    }
+                    // Bounds and occupation check for Down-Left
+                    if (col - 1 >= 1 && isUnblocked(board,moveDL)) {
+                        returnMoves.add(moveDL);
+                    }
+                }
 
                 // Left: LD, LU  (left 2, then 1 to a side)
                 ChessMove moveLD = knightMove(row,col,-1,-2);
                 ChessMove moveLU = knightMove(row,col,1,-2);
+                if (col - 2 >= 1) {
+                    // Bounds and occupation check for Left-Down
+                    if (row - 1 >= 1 && isUnblocked(board,moveLD)) {
+                        returnMoves.add(moveLD);
+                    }
+                    // Bounds and occupation check for Left-Up
+                    if (row + 1 <= 8 && isUnblocked(board,moveLU)) {
+                        returnMoves.add(moveLU);
+                    }
+                }
 
                 //TODO: Add the moves
                 //TODO: Add a block-checker.
