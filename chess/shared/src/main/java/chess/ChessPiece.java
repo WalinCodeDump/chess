@@ -487,9 +487,6 @@ public class ChessPiece {
                         returnMoves.add(moveLU);
                     }
                 }
-
-                //TODO: Add the moves
-                //TODO: Add a block-checker.
             }
             case ROOK -> {
                 // All orthogonal movements
