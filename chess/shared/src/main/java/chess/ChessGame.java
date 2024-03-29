@@ -1,6 +1,7 @@
 package chess;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -107,8 +108,48 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        // cycle through the
-        throw new RuntimeException("Not implemented");
+        // cycle through the pieceMoves for the other side.
+        // if any of them include the king's current position, return true.
+
+        ChessPosition kingPos = null; // We'll find out where the king's position is later
+        var isCheck = false; // Default to false.
+
+        // Find the king (this could be contained in the other loop, but then we'd have to save the full set
+        // of pieceMoves for every piece on the opponent's side. This is easier and saves on memory.)
+        for (int row = 1; row <= 8; row++) {
+            if (kingPos != null) break; // If it's found by now, then break out of the loop.
+            for (int col = 1; col <= 8; col++) {
+                var currPos = new ChessPosition(row, col);
+                var currPiece = theboard.getPiece(currPos);
+                if (currPiece.getPieceType() == ChessPiece.PieceType.KING && currPiece.getTeamColor() == teamColor) {
+                    kingPos = new ChessPosition(row, col); // Not sure if setting it equal to currPos causes problems
+                    break;
+                }
+            }
+        }
+
+        // Cycle through each of the squares
+        for (int row = 1; row <= 8; row++) {
+            for (int col = 1; col <= 8; col++) {
+                // On each square:
+                // - save the position and piece
+                // - get the team color; if it's the opposite side, then run pieceMoves
+                // - if the validMoves set contains a move that targets the king, break and return true.
+                var currPos = new ChessPosition(row, col);
+                var currPiece = theboard.getPiece(currPos);
+                if (currPiece.getTeamColor() != teamColor) {
+                    var otherTeamMoves = currPiece.pieceMoves(theboard,currPos);
+                    for (var oMove : otherTeamMoves) {
+                        if (oMove.getEndPosition() == kingPos) {
+                            isCheck = true;
+                            return true; // At least one piece of the opposition is attacking the king currently
+                        }
+                    }
+                }
+            }
+        }
+
+        return isCheck;
     }
 
     /**
