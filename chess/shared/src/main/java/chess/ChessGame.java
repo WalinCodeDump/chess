@@ -10,14 +10,18 @@ import java.util.Collection;
  */
 public class ChessGame {
 
+    private TeamColor turn; // holds team's turn
+    private ChessBoard theboard;
+
     public ChessGame() {
+        turn = TeamColor.WHITE;
     }
 
     /**
      * @return Which team's turn it is
      */
     public TeamColor getTeamTurn() {
-        throw new RuntimeException("Not implemented");
+        return turn;
     }
 
     /**
@@ -26,7 +30,7 @@ public class ChessGame {
      * @param team the team whose turn it is
      */
     public void setTeamTurn(TeamColor team) {
-        throw new RuntimeException("Not implemented");
+        turn = team;
     }
 
     /**
@@ -45,7 +49,37 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        throw new RuntimeException("Not implemented");
+        // first, get all pieceMoves. Call each of these a myMove.
+        var myPiece = theboard.getPiece(startPosition);
+        var myMoves = myPiece.pieceMoves(theboard,startPosition);
+        var returnMoves = myMoves;
+        for (ChessMove myMove: myMoves) {
+            // Make each myMove individually and then
+            // check the corresponding set of all pieceMoves of the opposing team.
+            // (i.e. run isInCheck)
+
+            // Make the myMove (save the piece, if any, at the end Position so the move is reversible)
+            var startPos = myMove.getStartPosition();
+            var endPos = myMove.getEndPosition();
+            var endPiece = theboard.getPiece(endPos);
+            theboard.addPiece(startPos,null);
+            theboard.addPiece(endPos,myPiece);
+
+            // Now, see if the king is in check.
+            var inCheck = isInCheck(myPiece.getTeamColor());
+
+            // If one of the opposing pieceMoves includes the king's position, then the myMove is not Valid.
+            // TODO: Make sure that removing a ChessMove from the "myMoves" set does not mess up the for loop
+            if (inCheck) {
+                myMoves.remove(myMove);
+            }
+
+            // Reverse the myMove to get ready for the next one.
+            theboard.addPiece(endPos, endPiece);
+            theboard.addPiece(startPos,myPiece);
+        }
+
+        return myMoves;
     }
 
     /**
@@ -55,6 +89,14 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
+        // get the start and end positions and the piece that's at the start
+
+        // Check that the move is in the validMoves set for the piece
+
+        // addPiece the piece to the final position
+
+        // addPiece null to the start position
+
         throw new RuntimeException("Not implemented");
     }
 
@@ -65,6 +107,7 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
+        // cycle through the
         throw new RuntimeException("Not implemented");
     }
 
