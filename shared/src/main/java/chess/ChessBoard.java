@@ -11,7 +11,6 @@ public class ChessBoard {
     ChessPiece[][] squares = new ChessPiece[8][8];
 
     public ChessBoard() {
-
     }
 
     /**
@@ -32,7 +31,6 @@ public class ChessBoard {
      * position
      */
     public ChessPiece getPiece(ChessPosition position) {
-
         return squares[position.getRow() - 1][position.getColumn() - 1];
     }
 
@@ -41,6 +39,25 @@ public class ChessBoard {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
+        // Pawn rows
+        for (int n = 1; n <= 8; n++) {
+            // Black row of pawns
+            squares[8-1-1][n-1] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN);
+            // White row of pawns
+            squares[0+1][n-1] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
+        }
+        // Rooks
+        // Not implemented
+
+        // Bishops
+        // Not implemented
+
+        // Knights
+        // Not implmented
+
+        // Kings/Queens
+        // Not implemented
+
         throw new RuntimeException("Not implemented");
     }
 }
