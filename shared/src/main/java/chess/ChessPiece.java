@@ -57,8 +57,8 @@ public class ChessPiece {
         switch(piece.getPieceType()) {
             // Bishop moves
             case PieceType.BISHOP:
-
-                return List.of(new ChessMove(new ChessPosition(5,4), new ChessPosition(1,8), null));
+                BishopMovesCalculator bishop = new BishopMovesCalculator();
+                return bishop.pieceMoves(board, myPosition);
             // Rook moves
 
             // Queen moves
