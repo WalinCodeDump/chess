@@ -65,6 +65,7 @@ public class ChessPiece {
             case PieceType.ROOK -> {
                 RookMovesCalculator rook = new RookMovesCalculator();
                 return rook.pieceMoves(board, myPosition);
+                // Testing...
             }
             // Queen moves
             case PieceType.QUEEN -> {
