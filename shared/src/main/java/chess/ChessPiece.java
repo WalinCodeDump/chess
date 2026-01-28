@@ -73,9 +73,15 @@ public class ChessPiece {
                 return queen.pieceMoves(board, myPosition);
             }
             // Knight moves
-
+            case PieceType.KNIGHT -> {
+                KnightMovesCalculator knight = new KnightMovesCalculator();
+                return knight.pieceMoves(board, myPosition);
+            }
             // Pawn moves
-
+            case PieceType.PAWN -> {
+                PawnMovesCalculator pawn = new PawnMovesCalculator();
+                return pawn.pieceMoves(board, myPosition);
+            }
             // King moves
             case PieceType.KING -> {
                 KingMovesCalculator king = new KingMovesCalculator();
