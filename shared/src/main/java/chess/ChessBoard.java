@@ -45,9 +45,9 @@ public class ChessBoard {
         // Pawn rows
         for (int n = 1; n <= 8; n++) {
             // Black row of pawns
-            squares[8-1-1][n-1] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN);
+            squares[7-1][n-1] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN);
             // White row of pawns
-            squares[0+1][n-1] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
+            squares[2-1][n-1] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
         }
 
         // Hm...for rooks, knights, and bishops, it's two along one row and two along another row.
