@@ -95,6 +95,23 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
+        // Iterate and find king
+        ChessPosition kingSpot;
+        boolean found = false;
+        for (int r = 1; r <= 8 && !found; r++) {
+            for (int c = 1; c <= 8 && !found; c++) {
+                if (board.getPiece(new ChessPosition(r,c)).getTeamColor() == teamColor) {
+                    kingSpot = new ChessPosition(r,c);
+                }
+            }
+        }
+
+        // Get all pieceMoves of both sides (easier this way)
+        // If any pieceMove has an endPosition that coincides with kingSpot...
+        // well, it's in check.
+
+
+
         throw new RuntimeException("Not implemented");
     }
 
