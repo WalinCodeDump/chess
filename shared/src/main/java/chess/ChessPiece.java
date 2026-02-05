@@ -105,4 +105,10 @@ public class ChessPiece {
     public int hashCode() {
         return Objects.hash(pieceColor, type);
     }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        // TODO: actually return a new chessPiece!!!
+        return super.clone();
+    }
 }

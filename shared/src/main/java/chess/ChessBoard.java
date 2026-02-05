@@ -100,4 +100,15 @@ public class ChessBoard {
     public int hashCode() {
         return Arrays.deepHashCode(squares);
     }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        // Initialize board
+        ChessBoard returnedBoard = new ChessBoard();
+
+        //TODO: Copy all pieces
+
+
+        return super.clone();
+    }
 }
