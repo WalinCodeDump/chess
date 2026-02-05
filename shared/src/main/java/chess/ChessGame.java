@@ -1,7 +1,6 @@
 package chess;
 
-import java.util.Collection;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -58,6 +57,8 @@ public class ChessGame {
         Collection<ChessMove> returnedMoves = piece.pieceMoves(board,startPosition);
 
         // TODO: remove invalid moves!!
+        // Loop through entire thing. Make every move.
+        // For EVERY SINGLE MOVE! create a copy of the board.
 
         return returnedMoves;
     }
@@ -89,6 +90,44 @@ public class ChessGame {
     }
 
     /**
+     * Makes a move, as long as the piece is on the board.
+     * Used in validMoves to see if a move puts the player in check.
+     *
+     * @param move chess move to perform
+     * @throws InvalidMoveException if move is off the board
+     */
+    public void makeMoveForced(ChessMove move) throws InvalidMoveException {
+        ChessPosition startPosition = move.getStartPosition();
+        ChessPosition endPosition = move.getEndPosition();
+        ChessPiece piece = board.getPiece(startPosition);
+
+        boolean onBoard = true;
+        int startrow = startPosition.getRow();
+        int startcol = startPosition.getColumn();
+        int endrow = endPosition.getRow();
+        int endcol = endPosition.getColumn();
+        if (startrow < 1 || startrow > 8 || startcol < 1 || startcol > 8) {
+            onBoard = false;
+        }
+        if (endrow < 1 || endrow > 8 || endcol < 1 || endcol > 8) {
+            onBoard = false;
+        }
+        if (onBoard) {
+            // Make the move
+            // Remove the piece that moves
+            board.addPiece(startPosition, null);
+
+            // Replace the piece that's getting taken
+            // ...if not null at endPosition, maybe save the taken piece?
+            board.addPiece(endPosition,piece);
+        }
+        else {
+            throw new InvalidMoveException(String.format("Move is off board: %s",move));
+        }
+    }
+
+
+    /**
      * Determines if the given team is in check
      *
      * @param teamColor which team to check for check
@@ -96,23 +135,41 @@ public class ChessGame {
      */
     public boolean isInCheck(TeamColor teamColor) {
         // Iterate and find king
-        ChessPosition kingSpot;
-        boolean found = false;
-        for (int r = 1; r <= 8 && !found; r++) {
-            for (int c = 1; c <= 8 && !found; c++) {
-                if (board.getPiece(new ChessPosition(r,c)).getTeamColor() == teamColor) {
-                    kingSpot = new ChessPosition(r,c);
+        ChessPosition kingSpot = null;
+        List<ChessMove> allmoves = new ArrayList<>();
+
+        // Iterate through the chessboard.
+        // Add all (potentially invalid) moves from other team.
+        // Add king position
+        for (int r = 1; r <= 8; r++) {
+            for (int c = 1; c <= 8; c++) {
+                ChessPosition currPos = new ChessPosition(r,c);
+                ChessPiece currPiece = board.getPiece(currPos);
+                if (currPiece != null) {
+                    if (currPiece.getTeamColor() != teamColor) {
+                        allmoves.addAll(currPiece.pieceMoves(board, currPos));
+                    } else {
+                        if (currPiece.getPieceType() == ChessPiece.PieceType.KING) {
+                            kingSpot = currPos;
+                        }
+                    }
                 }
             }
         }
 
-        // Get all pieceMoves of both sides (easier this way)
-        // If any pieceMove has an endPosition that coincides with kingSpot...
-        // well, it's in check.
+        // Iterate through moves; find if anyendPosition hits the king
+        ChessMove move = allmoves.getFirst();
+        for (Iterator<ChessMove> moves = allmoves.iterator(); moves.hasNext();) {
+            if (move.getEndPosition().equals(kingSpot)) {
+                // At least one piece has the king in sight.
+                return true;
+            }
+            move = moves.next();
+        }
 
 
-
-        throw new RuntimeException("Not implemented");
+        // Never found a piece move that hits the king
+        return false;
     }
 
     /**
