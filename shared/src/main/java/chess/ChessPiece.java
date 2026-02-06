@@ -108,7 +108,6 @@ public class ChessPiece {
 
     @Override
     protected ChessPiece clone() throws CloneNotSupportedException {
-
         return new ChessPiece(pieceColor, type);
     }
 }

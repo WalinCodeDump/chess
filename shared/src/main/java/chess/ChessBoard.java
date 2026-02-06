@@ -110,7 +110,13 @@ public class ChessBoard {
         for (int r = 1; r <= 8; r++){
             for (int c = 1; c <= 8; c++) {
                 ChessPosition addpos = new ChessPosition(r,c);
-                returnedBoard.addPiece(addpos, squares[r-1][c-1].clone());
+                if (squares[r-1][c-1] != null) {
+                    returnedBoard.addPiece(addpos, squares[r - 1][c - 1].clone());
+
+//                    catch(CloneNotSupportedException err) {
+//                        returnedBoard.addPiece(addpos, null);
+//                    }
+                }
             }
         }
 

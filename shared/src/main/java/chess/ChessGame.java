@@ -53,13 +53,77 @@ public class ChessGame {
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         ChessPiece piece = getBoard().getPiece(startPosition);
         TeamColor color = piece.getTeamColor();
+        ArrayList<ChessMove> returnedMoves; // = (ArrayList<ChessMove>) piece.pieceMoves(board, startPosition);
 
-        Collection<ChessMove> returnedMoves = piece.pieceMoves(board,startPosition);
-
+        if (piece != null) {
+            returnedMoves = (ArrayList<ChessMove>) piece.pieceMoves(board, startPosition);
+        }
+        else {
+            return List.of();
+        }
         // TODO: remove invalid moves!!
         // Loop through entire thing. Make every move.
         // For EVERY SINGLE MOVE! create a copy of the board.
+        ChessMove move = returnedMoves.getFirst();
+        boolean first = true;
+        boolean removeFirst = false;
+        for (Iterator<ChessMove> moves = returnedMoves.iterator(); moves.hasNext();) {
+        //for (int i = 0; i < returnedMoves.size(); i++) {
+            //move = returnedMoves.get(i);
 
+            // make a move
+            // // Copy board
+            // // Force the move on it
+            try {
+                // ChessBoard testBoard = (ChessBoard) board.clone();
+                try {
+                    //ChessBoard testBoard = makeMoveForced((ChessBoard) board.clone(), move);
+                    ChessGame testGame = (ChessGame) clone();
+                    testGame.setBoard(testGame.makeMoveForced(testGame.board, move));
+                    //System.out.println("Print debugging, line 83, ChessGame");
+                    boolean checked =testGame.isInCheck(testGame.getTeamTurn());
+                    //System.out.println("isInCheck test; line 86 of ChessGame");
+                    //System.out.println(checked);
+                    if (checked) {
+                        //returnedMoves.remove(i);
+                        //i--; // TODO: check to see that this is the behavior I want
+                        //System.out.println("Print debugging, move results in check. Line 87, validMoves, ChessGame");
+                        //ChessMove tmpMove = moves.next();
+                        if (!first)
+                            moves.remove();
+                        else {
+                            System.out.println("uh oh. First move is invalid, but can't be removed due to janky implementation. Line 98, validMoves, ChessGame");
+                            // returnedMoves.remove(0); // Exception because I can't modify the list directly...because I have an iterator
+                            removeFirst = true;
+                        }
+
+                        //System.out.println("Successful removal");
+                    }
+                    else {
+
+                    }
+                }
+                catch (InvalidMoveException e) {
+                    System.out.println("Invalid move in makeMoveForced...off board.");
+                }
+            } catch (CloneNotSupportedException e) {
+                //System.out.println("Clone not supported...print debugging, validMoves(), ChessGame, line 94");
+                // I have no idea what happened...
+                //throw new InvalidMoveException(new String("validMoves error: board clone failed"));
+            }
+
+            first = false;
+            move = moves.next();
+        }
+
+        if (removeFirst) {
+            for (ChessMove rmove : returnedMoves) {
+                System.out.println(startPosition);
+                System.out.println(returnedMoves.size());
+                System.out.println(rmove);
+            }
+            returnedMoves.remove(0);
+        }
         return returnedMoves;
     }
 
@@ -72,9 +136,33 @@ public class ChessGame {
     public void makeMove(ChessMove move) throws InvalidMoveException {
         ChessPosition startPosition = move.getStartPosition();
         ChessPosition endPosition = move.getEndPosition();
-        ChessPiece piece = board.getPiece(startPosition);
+        ChessPiece piece;
+        if (move.getPromotionPiece() == null)
+            piece = board.getPiece(startPosition);
+        else
+            piece = new ChessPiece(turn, move.getPromotionPiece());
 
-        Collection<ChessMove> validMoves = validMoves(startPosition);
+        if (piece == null)
+            throw new InvalidMoveException("No piece at start");
+        if (piece.getTeamColor() != turn)
+            throw new InvalidMoveException("Not the piece's turn!");
+        Collection<ChessMove> validMoves;
+
+        // Add in the moves
+        validMoves = validMoves(startPosition);
+
+//        catch (InvalidMoveException e) {
+//            throw new InvalidMoveException("makeMove error: likely that board clone failed");
+//        }
+
+        // Check validity
+        boolean valid;
+        try {
+            valid = validMoves.contains(move);
+        }
+        catch (Error e) {
+            System.out.println("uh oh. Line 133 print debugging ChessGame");
+        }
         if (validMoves.contains(move)) {
             // Make the move
             // Remove the piece that moves
@@ -83,6 +171,12 @@ public class ChessGame {
             // Replace the piece that's getting taken
             // ...if not null at endPosition, maybe save the taken piece?
             board.addPiece(endPosition,piece);
+
+            // Set new color for turn
+            if (turn == TeamColor.WHITE)
+                turn = TeamColor.BLACK;
+            else
+                turn = TeamColor.WHITE;
         }
         else {
             throw new InvalidMoveException(String.format("Invalid move: %s",move));
@@ -96,7 +190,7 @@ public class ChessGame {
      * @param move chess move to perform
      * @throws InvalidMoveException if move is off the board
      */
-    public void makeMoveForced(ChessMove move) throws InvalidMoveException {
+    public ChessBoard makeMoveForced(ChessBoard board, ChessMove move) throws InvalidMoveException {
         ChessPosition startPosition = move.getStartPosition();
         ChessPosition endPosition = move.getEndPosition();
         ChessPiece piece = board.getPiece(startPosition);
@@ -120,10 +214,14 @@ public class ChessGame {
             // Replace the piece that's getting taken
             // ...if not null at endPosition, maybe save the taken piece?
             board.addPiece(endPosition,piece);
+            //System.out.println("Print Debugging, line 186 of ChessGame, makeMoveForced()");
         }
         else {
             throw new InvalidMoveException(String.format("Move is off board: %s",move));
         }
+
+        // This returns the input board!! Not the game board.
+        return board;
     }
 
 
@@ -149,6 +247,7 @@ public class ChessGame {
                     if (currPiece.getTeamColor() != teamColor) {
                         allmoves.addAll(currPiece.pieceMoves(board, currPos));
                     } else {
+                        // System.out.println(String.format("Print debugging, line 234, isInCheck; piece pos: %s",currPos));
                         if (currPiece.getPieceType() == ChessPiece.PieceType.KING) {
                             kingSpot = currPos;
                         }
@@ -157,14 +256,21 @@ public class ChessGame {
             }
         }
 
-        // Iterate through moves; find if anyendPosition hits the king
+        // Iterate through moves; find if any endPosition hits the king
         ChessMove move = allmoves.getFirst();
+        //System.out.println(String.format("Print debugging isInCheck (line 244). King spot: %s",kingSpot));
         for (Iterator<ChessMove> moves = allmoves.iterator(); moves.hasNext();) {
+            //System.out.println(move);
             if (move.getEndPosition().equals(kingSpot)) {
                 // At least one piece has the king in sight.
                 return true;
             }
             move = moves.next();
+        }
+
+        // Need to check that last move...I should really improve my loop.
+        if (move.getEndPosition().equals(kingSpot)) {
+            return true;
         }
 
 
@@ -223,5 +329,14 @@ public class ChessGame {
     @Override
     public int hashCode() {
         return Objects.hash(turn, board);
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        ChessGame gameCopy = new ChessGame();
+        gameCopy.setTeamTurn(turn);
+        gameCopy.setBoard((ChessBoard) board.clone());
+
+        return gameCopy;
     }
 }
