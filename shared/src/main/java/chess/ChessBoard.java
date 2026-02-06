@@ -107,8 +107,13 @@ public class ChessBoard {
         ChessBoard returnedBoard = new ChessBoard();
 
         //TODO: Copy all pieces
+        for (int r = 1; r <= 8; r++){
+            for (int c = 1; c <= 8; c++) {
+                ChessPosition addpos = new ChessPosition(r,c);
+                returnedBoard.addPiece(addpos, squares[r-1][c-1].clone());
+            }
+        }
 
-
-        return super.clone();
+        return returnedBoard;
     }
 }

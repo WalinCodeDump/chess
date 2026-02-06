@@ -107,8 +107,8 @@ public class ChessPiece {
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
-        // TODO: actually return a new chessPiece!!!
-        return super.clone();
+    protected ChessPiece clone() throws CloneNotSupportedException {
+
+        return new ChessPiece(pieceColor, type);
     }
 }
