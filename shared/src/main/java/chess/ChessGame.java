@@ -65,12 +65,13 @@ public class ChessGame {
         // Loop through entire thing. Make every move.
         // For EVERY SINGLE MOVE! create a copy of the board.
         ChessMove move = returnedMoves.getFirst();
+        System.out.println(String.format("First move: %s",move));
         boolean first = true;
         boolean removeFirst = false;
         for (Iterator<ChessMove> moves = returnedMoves.iterator(); moves.hasNext();) {
         //for (int i = 0; i < returnedMoves.size(); i++) {
             //move = returnedMoves.get(i);
-
+            System.out.println(String.format("Pdebug l_74, vMoves/CG, current move: %s", move));
             // make a move
             // // Copy board
             // // Force the move on it
@@ -81,7 +82,7 @@ public class ChessGame {
                     ChessGame testGame = (ChessGame) clone();
                     testGame.setBoard(testGame.makeMoveForced(testGame.board, move));
                     //System.out.println("Print debugging, line 83, ChessGame");
-                    boolean checked =testGame.isInCheck(testGame.getTeamTurn());
+                    boolean checked = testGame.isInCheck(testGame.getTeamTurn());
                     //System.out.println("isInCheck test; line 86 of ChessGame");
                     //System.out.println(checked);
                     if (checked) {
@@ -89,15 +90,16 @@ public class ChessGame {
                         //i--; // TODO: check to see that this is the behavior I want
                         //System.out.println("Print debugging, move results in check. Line 87, validMoves, ChessGame");
                         //ChessMove tmpMove = moves.next();
-                        if (!first)
+                        if (!first) {
+                            System.out.println(String.format("Removing move %s",move));
                             moves.remove();
+                        }
                         else {
                             System.out.println("uh oh. First move is invalid, but can't be removed due to janky implementation. Line 98, validMoves, ChessGame");
                             // returnedMoves.remove(0); // Exception because I can't modify the list directly...because I have an iterator
                             removeFirst = true;
                         }
 
-                        //System.out.println("Successful removal");
                     }
                     else {
 
@@ -117,12 +119,15 @@ public class ChessGame {
         }
 
         if (removeFirst) {
-            for (ChessMove rmove : returnedMoves) {
-                System.out.println(startPosition);
-                System.out.println(returnedMoves.size());
-                System.out.println(rmove);
-            }
-            returnedMoves.remove(0);
+//            System.out.println(startPosition);
+//            System.out.println(returnedMoves.size());
+//            for (ChessMove rmove : returnedMoves) {
+//                System.out.println(rmove);
+//            }
+//
+//            System.out.println("--------line 128------");
+//            System.out.println(returnedMoves.get(0));
+//            returnedMoves.remove(0);
         }
         return returnedMoves;
     }
@@ -161,7 +166,7 @@ public class ChessGame {
             valid = validMoves.contains(move);
         }
         catch (Error e) {
-            System.out.println("uh oh. Line 133 print debugging ChessGame");
+            System.out.println("uh oh. Line 165 print debugging ChessGame");
         }
         if (validMoves.contains(move)) {
             // Make the move
@@ -263,6 +268,7 @@ public class ChessGame {
             //System.out.println(move);
             if (move.getEndPosition().equals(kingSpot)) {
                 // At least one piece has the king in sight.
+                System.out.println(String.format("Pdebug, line 267, loop 2 of isInCheck, ChessGame, %s",move));
                 return true;
             }
             move = moves.next();
@@ -270,6 +276,7 @@ public class ChessGame {
 
         // Need to check that last move...I should really improve my loop.
         if (move.getEndPosition().equals(kingSpot)) {
+            System.out.println(String.format("Print debugging, line 280, lastmove of isInCheck, ChessGame, %s", move));
             return true;
         }
 
