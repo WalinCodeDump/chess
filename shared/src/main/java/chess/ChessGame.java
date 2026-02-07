@@ -258,7 +258,7 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        return isInCheck(teamColor) && isTrapped(teamColor);
     }
 
     /**
@@ -269,7 +269,40 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+//        if (isInCheck(teamColor)) {
+//            return false;
+//        }
+
+        return !isInCheck(teamColor) && isTrapped(teamColor);
+    }
+
+    /**
+     * Helper function that both isInCheckmate and isInStalemate call.
+     * Returns true if there are no valid moves for this color.
+     * @param teamColor which team to check for stalemate
+     * @return True if the specified team is in stalemate, otherwise false
+     */
+    public boolean isTrapped(TeamColor teamColor) {
+        ArrayList<ChessMove> allmoves = new ArrayList<>();
+        for (int r = 1; r <= 8; r++) {
+            for (int c = 1; c <= 8; c++) {
+                ChessPosition pos = new ChessPosition(r,c);
+                ChessPiece piece = board.getPiece(pos);
+                if (piece != null) {
+                    if (teamColor == piece.getTeamColor()) {
+                        // Add new moves
+                        allmoves.addAll(validMoves(pos));
+                    }
+                }
+            }
+        }
+        if (allmoves.isEmpty()) {
+            // No valid moves...
+            return true;
+        }
+
+        // Has valid moves left
+        return false;
     }
 
     /**
