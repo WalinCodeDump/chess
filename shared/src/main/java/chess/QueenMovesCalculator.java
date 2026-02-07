@@ -1,6 +1,7 @@
 package chess;
 
 import java.util.Collection;
+import java.util.ArrayList;
 import java.util.stream.Stream;
 
 public class QueenMovesCalculator implements PieceMovesCalculator {
@@ -13,6 +14,7 @@ public class QueenMovesCalculator implements PieceMovesCalculator {
         Collection<ChessMove> rmoves = rook.pieceMoves(board, position);
 
         // Hm. Just learned about Stream concatenation. Cool utility.
-        return Stream.concat(bmoves.stream(),rmoves.stream()).toList();
+        return new ArrayList<>(Stream.concat(bmoves.stream(),rmoves.stream()).toList());
     }
+
 }

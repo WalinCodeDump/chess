@@ -89,6 +89,7 @@ public class ChessPiece {
             }
         }
 
+        System.out.println("Pdebug l_92, pMoves/CP...unknown error");
         return List.of();
     }
 
