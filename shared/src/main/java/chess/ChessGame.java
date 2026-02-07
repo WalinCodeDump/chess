@@ -132,7 +132,7 @@ public class ChessGame {
             valid = validMoves.contains(move);
         }
         catch (Error e) {
-            System.out.println("uh oh. Line 165 print debugging ChessGame");
+            System.out.println("uh oh. Line 133 print debugging ChessGame");
         }
         if (validMoves.contains(move)) {
             // Make the move
@@ -245,6 +245,7 @@ public class ChessGame {
             //System.out.println(String.format("Print debugging, line 280, lastmove of isInCheck, ChessGame, %s", move));
             return true;
         }
+
 
         // Never found a piece move that hits the king
         return false;
