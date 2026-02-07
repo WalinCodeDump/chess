@@ -51,19 +51,18 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
+        // Get piece and initialize stuff
         ChessPiece piece = getBoard().getPiece(startPosition);
         TeamColor color = piece.getTeamColor();
         ArrayList<ChessMove> returnedMoves; // = (ArrayList<ChessMove>) piece.pieceMoves(board, startPosition);
-
         if (piece != null) {
             returnedMoves = (ArrayList<ChessMove>) piece.pieceMoves(board, startPosition);
         }
         else {
             return new ArrayList<ChessMove>();
-            //return ArrayList<ChessMove> ();
         }
 
-        // TODO: remove invalid moves!!
+        // Remove invalid moves
         // Loop through entire thing. Make every move.
         // For EVERY SINGLE MOVE! create a copy of the board.
         ChessMove move = null;
@@ -75,16 +74,16 @@ public class ChessGame {
 
             System.out.println(String.format("Pdebug l_74, vMoves/CG, current move: %s", move));
             try {
-                //ChessBoard testBoard = makeMoveForced((ChessBoard) board.clone(), move);
+
                 ChessGame testGame = (ChessGame) clone();
+                testGame.setTeamTurn(color);
                 testGame.setBoard(testGame.makeMoveForced(testGame.board, move));
                 boolean checked = testGame.isInCheck(testGame.getTeamTurn());
                 if (checked) {
                     //System.out.println("Print debugging, move results in check. Line 87, validMoves, ChessGame");
                     //ChessMove tmpMove = moves.next();
-                    System.out.println(String.format("Removing move %s",move));
+                    //System.out.println(String.format("Removing move %s",move));
                     moves.remove();
-
                 }
             }
             catch (InvalidMoveException e) {
@@ -94,20 +93,8 @@ public class ChessGame {
                 System.out.println("Pdebug l_95, vMoves/CG. Cloning error?");
             }
 
-            first = false;
         }
 
-        if (removeFirst) {
-//            System.out.println(startPosition);
-//            System.out.println(returnedMoves.size());
-//            for (ChessMove rmove : returnedMoves) {
-//                System.out.println(rmove);
-//            }
-//
-//            System.out.println("--------line 128------");
-//            System.out.println(returnedMoves.get(0));
-//            returnedMoves.remove(0);
-        }
         return returnedMoves;
     }
 
